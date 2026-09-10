@@ -16,9 +16,7 @@ class PoseEstimator:
         calibration = np.load(calibration_file)
 
         self.camera_matrix = calibration["camera_matrix"]
-        self.distortion_coefficients = calibration[
-            "distortion_coefficients"
-        ]
+        self.distortion_coefficients = calibration["distortion_coefficients"]
 
         self.marker_size = marker_size
 
