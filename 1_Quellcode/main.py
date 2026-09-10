@@ -2,13 +2,23 @@ import cv2
 
 from vision.camera import open_camera
 from vision.aruco_detector import ArucoDetector
+from vision.pose_estimator import PoseEstimator
 
 
 def main():
     camera = open_camera(0)
     detector = ArucoDetector()
 
-    window_name = "ArUco Detection"
+    # Set marker side length in meters
+    marker_size = 0.10
+
+    # Change path if needed
+    pose_estimator = PoseEstimator(
+        "calibration/webcam/calibration/camera_calibration.npz",
+        marker_size
+    )
+
+    window_name = "ArUco Pose Estimation"
     cv2.namedWindow(window_name)
 
     print("Camera opened successfully.")
@@ -26,14 +36,66 @@ def main():
             # if marker is identified, draw marker in the frame
             # print(corners, " ", ids)
             if ids is not None:
-                print(corners, " ", ids)
+                # print(corners, " ", ids)
                 cv2.aruco.drawDetectedMarkers(
                     frame,
                     corners,
                     ids
                 )
 
-            # Show frame with drawn marker
+                for marker_corners, marker_id in zip(corners, ids.flatten()):
+                    rotation_vector, translation_vector = \
+                        pose_estimator.estimate_pose(marker_corners)
+
+                    if translation_vector is None:
+                        continue
+
+                    x = translation_vector[0][0]
+                    y = translation_vector[1][0]
+                    z = translation_vector[2][0]
+
+                    print(
+                        f"Marker {marker_id}: "
+                        f"x={x:.3f} m, "
+                        f"y={y:.3f} m, "
+                        f"z={z:.3f} m"
+                    )
+
+                    cv2.drawFrameAxes(
+                        frame,
+                        pose_estimator.camera_matrix,
+                        pose_estimator.distortion_coefficients,
+                        rotation_vector,
+                        translation_vector,
+                        marker_size * 0.5
+                    )
+
+                    position_text = (
+                        f"ID {marker_id}: "
+                        f"x={x:.2f} "
+                        f"y={y:.2f} "
+                        f"z={z:.2f} m"
+                    )
+
+                    corner = marker_corners.reshape(4, 2)[0]
+
+                    text_position = (
+                        int(corner[0]),
+                        int(corner[1]) - 15
+                    )
+
+                    cv2.putText(
+                        frame,
+                        position_text,
+                        text_position,
+                        cv2.FONT_HERSHEY_SIMPLEX,
+                        0.5,
+                        (0, 255, 0),
+                        2
+                    )
+
+
+            # Show frame with drawn marker, position text and frame axis showing orientation
             cv2.imshow("Camera Test", frame)
 
             # waitKey() returns the key pressed while the OpenCV window is active

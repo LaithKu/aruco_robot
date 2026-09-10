@@ -99,7 +99,7 @@ def main():
     print("\nDistortion coefficients:")
     print(distortion_coefficients)
 
-    # Change directory if needed
+    # Change path if needed
     np.savez(
         "webcam/calibration/camera_calibration.npz",
         camera_matrix=camera_matrix,
