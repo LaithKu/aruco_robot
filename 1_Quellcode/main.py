@@ -37,15 +37,18 @@ def main():
             # print(corners, " ", ids)
             if ids is not None:
                 # print(corners, " ", ids)
+                # Draw marker boundaries
                 cv2.aruco.drawDetectedMarkers(
                     frame,
                     corners,
                     ids
                 )
 
+                # Combine marker id and corners in one element and proceed
+                # with the pose estimation and visualisation for each detected marker separately
                 for marker_corners, marker_id in zip(corners, ids.flatten()):
-                    rotation_vector, translation_vector = \
-                        pose_estimator.estimate_pose(marker_corners)
+                    # Estimate relative pose to camera
+                    rotation_vector, translation_vector = pose_estimator.estimate_pose(marker_corners)
 
                     if translation_vector is None:
                         continue
@@ -61,6 +64,7 @@ def main():
                         f"z={z:.3f} m"
                     )
 
+                    # Draw local frame axes with origin in the center of each marker
                     cv2.drawFrameAxes(
                         frame,
                         pose_estimator.camera_matrix,
@@ -77,13 +81,15 @@ def main():
                         f"z={z:.2f} m"
                     )
 
+                    # Get corner position of first corene (upper left corner)
                     corner = marker_corners.reshape(4, 2)[0]
 
                     text_position = (
                         int(corner[0]),
-                        int(corner[1]) - 15
+                        int(corner[1]) - 15     # y offset between position text and marker boundary
                     )
 
+                    # Show position text above each marker
                     cv2.putText(
                         frame,
                         position_text,
@@ -93,7 +99,6 @@ def main():
                         (0, 255, 0),
                         2
                     )
-
 
             # Show frame with drawn marker, position text and frame axis showing orientation
             cv2.imshow("Camera Test", frame)
