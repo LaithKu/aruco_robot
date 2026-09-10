@@ -20,8 +20,8 @@ class PoseEstimator:
 
         self.marker_size = marker_size
 
+        # Set Origin of each Marker to be in its center
         half_size = marker_size / 2.0
-
         # Marker corner coordinates in its local 3D coordinate system
         self.object_points = np.array(
             [
@@ -41,11 +41,11 @@ class PoseEstimator:
         # Solve Perspective-n-Point to get translation and rotation vector
         success, rotation_vector, translation_vector = \
             cv2.solvePnP(
-                self.object_points,
-                image_points,
-                self.camera_matrix,
+                self.object_points,  # 3D marker corners
+                image_points,   # 2D marker corners from image
+                self.camera_matrix,     # Intrinsic camera matrix
                 self.distortion_coefficients,
-                flags=cv2.SOLVEPNP_IPPE_SQUARE
+                flags=cv2.SOLVEPNP_IPPE_SQUARE      # Solve for square planar forms with known geometry (Marker)
             )
 
         if not success:
