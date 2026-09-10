@@ -9,6 +9,14 @@ import numpy as np
 
 
 def main():
+
+    # change paths depending on camera
+    # use "front_camera/calibration/camera_calibration.npz" for LeKiwi
+    output_file = \
+        "webcam/calibration/camera_calibration.npz"
+    # use "front_camera/images/*.jpg" for LeKiwi
+    image_files = "webcam/images/*.jpg"
+
     # Number of inner chessboard corners
     chessboard_size = (10, 7)
 
@@ -29,7 +37,7 @@ def main():
     image_points = []
 
     # Change path if needed
-    image_files = glob.glob("webcam/images/*.jpg")
+    image_files = glob.glob(image_files)
 
     if not image_files:
         raise RuntimeError("No calibration images found.")
@@ -101,7 +109,7 @@ def main():
 
     # Change path if needed
     np.savez(
-        "webcam/calibration/camera_calibration.npz",
+        output_file,
         camera_matrix=camera_matrix,
         distortion_coefficients=distortion_coefficients
     )
