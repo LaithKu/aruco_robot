@@ -1,9 +1,8 @@
-import cv2
-
-
 """
 This script is used to generate ArUco markers with different IDs in different sizes and save them as png
 """
+
+import cv2
 
 
 def main():
