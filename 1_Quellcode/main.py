@@ -3,13 +3,14 @@ import cv2
 from vision.camera import open_camera
 from vision.aruco_detector import ArucoDetector
 from vision.pose_estimator import PoseEstimator
+from navigation.follow_controller import FollowController
 
 
 def main():
     camera = open_camera(0)
     detector = ArucoDetector()
 
-    # Set marker side length in meters
+    # Real marker side length in meters
     marker_size = 0.10
 
     # Change path if needed
@@ -18,10 +19,20 @@ def main():
         marker_size
     )
 
-    window_name = "ArUco Pose Estimation"
+    # Follow Controller
+    follow_controller = FollowController(
+        target_distance=0.30,       # Desired Destination from target
+        distance_tolerance=0.05,
+        lateral_tolerance=0.05
+    )
+    # Only this marker will be used as the navigation target
+    target_id = 0
+
+    window_name = "ArUco Follow Controller"
     cv2.namedWindow(window_name)
 
     print("Camera opened successfully.")
+    print(f"Following marker ID {target_id}")
     print("Press Q or ESC to quit.")
     try:
         while True:
@@ -33,8 +44,12 @@ def main():
 
             # Marker detection
             corners, ids, rejected = detector.detect(frame)
-            # if marker is identified, draw marker in the frame
             # print(corners, " ", ids)
+
+            # Default command if the target marker is not visible
+            command = "STOP"
+            target_found = False
+
             if ids is not None:
                 # print(corners, " ", ids)
                 # Draw marker boundaries
@@ -99,6 +114,27 @@ def main():
                         (0, 255, 0),
                         2
                     )
+
+                    # Navigation
+                    # Ignore all markers for navigation except the selected target
+                    if marker_id != target_id:
+                        continue
+                    target_found = True
+                    command = follow_controller.get_command(x, z)
+
+            # Stop if target is not found
+            if not target_found:
+                command = "STOP"
+
+            cv2.putText(
+                frame,
+                f"Command: {command}",
+                (20, 40),
+                cv2.FONT_HERSHEY_SIMPLEX,
+                1,
+                (0, 255, 255),
+                2
+            )
 
             # Show frame with drawn marker, position text and frame axis showing orientation
             cv2.imshow("Camera Test", frame)
