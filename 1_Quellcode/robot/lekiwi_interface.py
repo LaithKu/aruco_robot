@@ -11,6 +11,7 @@ from lerobot.robots.lekiwi import LeKiwi, LeKiwiConfig
 class LeKiwiInterface:
     def __init__(
         self,
+        # Change depending on Raspi configuration
         port="/dev/ttyACM0",
         robot_id="aruco_lekiwi",
         linear_speed=0.10
@@ -18,13 +19,14 @@ class LeKiwiInterface:
         self.linear_speed = linear_speed
 
         front_camera = OpenCVCameraConfig(
+            # Change depending on Raspi configuration
             index_or_path="/dev/video0",
             fps=30,
             width=640,
             height=480,
             color_mode=ColorMode.BGR,
-            fourcc="MJPG",
-            rotation=Cv2Rotation.ROTATE_180
+            fourcc="MJPG"
+            # rotation=Cv2Rotation.ROTATE_180
         )
 
         config = LeKiwiConfig(
