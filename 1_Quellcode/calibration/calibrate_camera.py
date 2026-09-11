@@ -12,10 +12,12 @@ def main():
 
     # change paths depending on camera
     # use "lekiwi/calibration/camera_calibration.npz" for LeKiwi
+    # use "webcam/calibration/camera_calibration.npz" for webcam
     output_file = \
-        "webcam/calibration/camera_calibration.npz"
+        "lekiwi/calibration/camera_calibration.npz"
     # use "lekiwi/images/*.jpg" for LeKiwi
-    image_files = "webcam/images/*.jpg"
+    # use "webcam/images/*.jpg" for webcam
+    image_files = "lekiwi/images/*.jpg"
 
     # Number of inner chessboard corners
     # Change if needed
