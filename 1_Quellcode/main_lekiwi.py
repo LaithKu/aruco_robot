@@ -14,13 +14,13 @@ ENABLE_MOVEMENT = True
 def main():
     robot = LeKiwiInterface(
         port="/dev/ttyACM0",
-        linear_speed=0.05
+        linear_speed=0.10
     )
 
     detector = ArucoDetector()
 
     # Real marker side length in meters
-    marker_size = 0.10
+    marker_size = 0.95
 
     # Calibration parameters of the LeKiwi front camera
     pose_estimator = PoseEstimator(
@@ -29,7 +29,7 @@ def main():
     )
 
     follow_controller = FollowController(
-        target_distance=0.30,
+        target_distance=0.50,
         distance_tolerance=0.05,
         lateral_tolerance=0.05
     )
