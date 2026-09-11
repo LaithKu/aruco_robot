@@ -117,10 +117,7 @@ def main():
         distortion_coefficients=distortion_coefficients
     )
 
-    print(
-        "\nCalibration saved to "
-        "calibration/camera_calibration.npz"
-    )
+    print(f"\nCalibration saved to {output_file}")
 
 
 if __name__ == "__main__":
