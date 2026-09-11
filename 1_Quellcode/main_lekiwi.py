@@ -8,7 +8,7 @@ from robot.lekiwi_interface import LeKiwiInterface
 
 # Keep movement disabled until camera, calibration and pose estimation
 # have been tested successfully on the real robot.
-ENABLE_MOVEMENT = True
+ENABLE_MOVEMENT = False
 
 
 def main():
