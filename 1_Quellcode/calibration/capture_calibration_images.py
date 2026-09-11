@@ -13,8 +13,8 @@ def main():
     camera = open_camera(0)
 
     # change path depending on camera
-    # use "lekiwi/images" for LeKiwi. "webcam/images" for webcam
-    output_directory = "lekiwi/images"
+    # use "calibration/lekiwi/images" for LeKiwi. "calibration/webcam/images" for webcam
+    output_directory = "calibration/lekiwi/images"
     os.makedirs(output_directory, exist_ok=True)
 
     image_counter = 0

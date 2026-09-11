@@ -11,13 +11,13 @@ import numpy as np
 def main():
 
     # change paths depending on camera
-    # use "lekiwi/calibration/camera_calibration.npz" for LeKiwi
-    # use "webcam/calibration/camera_calibration.npz" for webcam
+    # use "calibration/lekiwi/calibration/camera_calibration.npz" for LeKiwi
+    # use "calibration/webcam/calibration/camera_calibration.npz" for webcam
     output_file = \
-        "lekiwi/calibration/camera_calibration.npz"
-    # use "lekiwi/images/*.jpg" for LeKiwi
-    # use "webcam/images/*.jpg" for webcam
-    image_files = "lekiwi/images/*.jpg"
+        "calibration/lekiwi/calibration/camera_calibration.npz"
+    # use "calibration/lekiwi/images/*.jpg" for LeKiwi
+    # use "calibraation/webcam/images/*.jpg" for webcam
+    image_files = "calibration/lekiwi/images/*.jpg"
 
     # Number of inner chessboard corners
     # Change if needed

@@ -14,6 +14,8 @@ def main():
     marker_size = 0.10
 
     # Change path if needed
+    # Use "calibration/lekiwi/calibration/camera_calibration.npz" for lekiwi
+    # Use "calibration/webcam/calibration/camera_calibration.npz" for webcam
     pose_estimator = PoseEstimator(
         "calibration/webcam/calibration/camera_calibration.npz",
         marker_size
