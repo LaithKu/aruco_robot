@@ -3,7 +3,7 @@ This script is the interface to run ArUco based navigation locally
 on the Raspberry Pi5 of the LeKiwi robot running wit LeRobot
 """
 
-from lerobot.cameras import Cv2Rotation
+from lerobot.cameras import Cv2Rotation, ColorMode
 from lerobot.cameras.opencv import OpenCVCameraConfig
 from lerobot.robots.lekiwi import LeKiwi, LeKiwiConfig
 
@@ -22,6 +22,7 @@ class LeKiwiInterface:
             fps=30,
             width=640,
             height=480,
+            color_mode=ColorMode.BGR,
             fourcc="MJPG",
             rotation=Cv2Rotation.ROTATE_180
         )

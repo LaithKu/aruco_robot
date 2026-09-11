@@ -1,57 +1,71 @@
 import cv2
 
-from vision.camera import open_camera
 from vision.aruco_detector import ArucoDetector
 from vision.pose_estimator import PoseEstimator
 from navigation.follow_controller import FollowController
+from robot.lekiwi_interface import LeKiwiInterface
+
+
+# Keep movement disabled until camera, calibration and pose estimation
+# have been tested successfully on the real robot.
+ENABLE_MOVEMENT = False
 
 
 def main():
-    camera = open_camera(0)
+    robot = LeKiwiInterface(
+        port="/dev/ttyACM0",
+        linear_speed=0.05
+    )
+
     detector = ArucoDetector()
 
     # Real marker side length in meters
     marker_size = 0.10
 
-    # Change path if needed
+    # Calibration parameters of the LeKiwi front camera
     pose_estimator = PoseEstimator(
-        "calibration/webcam/calibration/camera_calibration.npz",
+        "calibration/lekiwi/calibration/camera_calibration.npz",
         marker_size
     )
 
-    # Follow Controller
     follow_controller = FollowController(
-        target_distance=0.30,       # Desired Destination from target
+        target_distance=0.30,
         distance_tolerance=0.05,
         lateral_tolerance=0.05
     )
+
     # Only this marker will be used as the navigation target
     target_id = 0
 
-    window_name = "ArUco Follow Controller"
+    window_name = "LeKiwi ArUco Follow Controller"
     cv2.namedWindow(window_name)
 
-    print("Camera opened successfully.")
+    print("Connecting to LeKiwi...")
+    robot.connect()
+
+    print("LeKiwi connected successfully.")
     print(f"Following marker ID {target_id}")
+
+    if ENABLE_MOVEMENT:
+        print("WARNING: Robot movement is ENABLED.")
+    else:
+        print("Robot movement is DISABLED.")
+
     print("Press Q or ESC to quit.")
+
     try:
         while True:
-            success, frame = camera.read()
+            # Get the latest frame from the LeKiwi front camera
+            frame = robot.get_frame()
 
-            if not success:
-                print("Could not read frame from camera.")
-                break
-
-            # Marker detection
+            # Detect ArUco markers
             corners, ids, rejected = detector.detect(frame)
-            # print(corners, " ", ids)
 
             # Default command if the target marker is not visible
             command = "STOP"
             target_found = False
 
             if ids is not None:
-                # print(corners, " ", ids)
                 # Draw boundaries around all detected markers
                 cv2.aruco.drawDetectedMarkers(
                     frame,
@@ -126,6 +140,14 @@ def main():
             if not target_found:
                 command = "STOP"
 
+            # Send the calculated command only when movement was
+            # explicitly enabled.
+            if ENABLE_MOVEMENT:
+                robot.execute(command)
+            else:
+                # Make sure the robot remains stationary during testing
+                robot.stop()
+
             cv2.putText(
                 frame,
                 f"Command: {command}",
@@ -133,6 +155,22 @@ def main():
                 cv2.FONT_HERSHEY_SIMPLEX,
                 1,
                 (0, 255, 255),
+                2
+            )
+
+            movement_status = (
+                "MOVEMENT ENABLED"
+                if ENABLE_MOVEMENT
+                else "MOVEMENT DISABLED"
+            )
+
+            cv2.putText(
+                frame,
+                movement_status,
+                (20, 80),
+                cv2.FONT_HERSHEY_SIMPLEX,
+                0.7,
+                (0, 0, 255),
                 2
             )
 
@@ -146,14 +184,20 @@ def main():
                 break
 
             # Also stop when the user closes the window with the X button
-            if cv2.getWindowProperty(window_name, cv2.WND_PROP_VISIBLE) < 1:
+            if cv2.getWindowProperty(window_name,cv2.WND_PROP_VISIBLE) < 1:
                 break
+
     finally:
-        # Terminate the opened camera and close its window
-        camera.release()
+        # Stop the base before disconnecting from the robot
+        print("Stopping robot...")
+        robot.stop()
+
+        print("Disconnecting from LeKiwi...")
+        robot.disconnect()
+
         cv2.destroyAllWindows()
 
-    print("Camera closed.")
+    print("LeKiwi disconnected.")
 
 
 if __name__ == "__main__":

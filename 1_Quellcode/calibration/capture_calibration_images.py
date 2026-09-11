@@ -13,7 +13,8 @@ def main():
     camera = open_camera(0)
 
     # change path depending on camera
-    output_directory = "webcam/images"  # use "front_camera/images" for LeKiwi
+    # use "lekiwi/images" for LeKiwi
+    output_directory = "webcam/images"
     os.makedirs(output_directory, exist_ok=True)
 
     image_counter = 0
