@@ -22,9 +22,39 @@ def main():
     try:
         robot.execute("MOVE_FORWARD")
 
+        print("Moving forward")
+
         time.sleep(0.5)
 
         robot.stop()
+
+        robot.execute("MOVE_BACKWARD")
+
+
+        print("Moving backward")
+
+        time.sleep(0.5)
+
+        robot.stop()
+
+
+        robot.execute("MOVE_RIGHT")
+
+        print("Moving right")
+
+        time.sleep(0.5)
+
+        robot.stop()
+
+
+        robot.execute("MOVE_LEFT")
+
+        print("Moving left")
+
+        time.sleep(0.5)
+
+        robot.stop()
+
 
         print("Movement test finished.")
 
