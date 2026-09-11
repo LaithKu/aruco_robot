@@ -20,7 +20,7 @@ def main():
     detector = ArucoDetector()
 
     # Real marker side length in meters
-    marker_size = 0.95
+    marker_size = 0.095
 
     # Calibration parameters of the LeKiwi front camera
     pose_estimator = PoseEstimator(
