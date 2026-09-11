@@ -18,7 +18,8 @@ def main():
     image_files = "webcam/images/*.jpg"
 
     # Number of inner chessboard corners
-    chessboard_size = (10, 7)
+    # Change if needed
+    chessboard_size = (9, 6)
 
     # Prepare 3D coordinates of the chessboard corners
     # Each object point represents a square from the chessboard

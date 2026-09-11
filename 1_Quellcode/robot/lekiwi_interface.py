@@ -69,7 +69,7 @@ class LeKiwiInterface:
             self.stop()
 
     def stop(self):
-        self._send_velocity()
+        self.robot.stop_base()
 
     def _send_velocity(
         self,
@@ -77,11 +77,21 @@ class LeKiwiInterface:
         y_velocity=0.0,
         theta_velocity=0.0
     ):
+        # Get current position of arm
+        observation = self.robot.get_observation()
+
         action = {
+            key: value
+            for key, value in observation.items()
+            if key.endswith(".pos")
+        }
+
+        # Update only base velocities and send previous arm positions back
+        action.update({
             "x.vel": x_velocity,
             "y.vel": y_velocity,
             "theta.vel": theta_velocity
-        }
+        })
 
         self.robot.send_action(action)
 

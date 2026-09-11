@@ -38,7 +38,6 @@ def main():
                 break
 
     finally:
-        robot.stop()
         robot.disconnect()
         cv2.destroyAllWindows()
 
