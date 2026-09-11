@@ -14,7 +14,7 @@ ENABLE_MOVEMENT = True
 def main():
     robot = LeKiwiInterface(
         port="/dev/ttyACM0",
-        linear_speed=0.07
+        linear_speed=0.05
     )
 
     detector = ArucoDetector()
