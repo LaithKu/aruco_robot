@@ -29,7 +29,7 @@ def main():
     )
 
     follow_controller = FollowController(
-        target_distance=0.50,
+        target_distance=0.70,
         distance_tolerance=0.05,
         lateral_tolerance=0.05
     )
