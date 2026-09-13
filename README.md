@@ -201,6 +201,7 @@ Die wichtigsten Komponenten sind:
 - `main.py` – Entwicklung und Tests mit externer Webcam
 - `main_lekiwi.py` – Integration auf dem LeKiwi/Raspberry Pi
 - `calibration/` – Aufnahme und Berechnung der Kamerakalibrierung
+- `requirments.txt/` – Verwendete Python Pakete
 
 An einigen Stellen im Code können die definierten Pfade für Speicherung und Aufruf
 von Daten wie Kalibrierbilder oder Ergebnisse der Kamerakalibrierung sowie Parameter für die 
