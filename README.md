@@ -232,4 +232,8 @@ Daten, beispielsweise Kalibrierbilder und Kamerakalibrierungsparameter, sowie
 Parameter der Roboterkonfiguration und die reale Seitenlänge der Marker
 angepasst werden. Die entsprechenden Stellen sind im Quellcode kommentiert.
 
+Hinweis: Da die Kalibrierung der Lekiwi Kamera lokal auf dem Pi 5 stattgefunden hat, 
+ist die Camera Matrix mit den intrinistischen Parameter nicht unter `1_Quellcode/calibration/lekiwi/calibration` im npz-format vorhanden.
+Stattdessen habe ich ein Screenshot der Terminalausgabe hochgeladen.
+
 ---
