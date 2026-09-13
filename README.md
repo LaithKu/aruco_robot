@@ -12,13 +12,15 @@ verwendet. Der LeKiwi soll diesem Marker folgen und einen definierten Abstand
 zum Ziel einhalten.
 
 Die Bildverarbeitung und Navigation laufen lokal auf dem Raspberry Pi 5 des
-LeKiwi. 
+LeKiwi.
 
 ### Thema: ArUco-basierte visuelle Navigation mit dem LeKiwi Roboter
 
-- **Autor 1:** Kebab, Mohamad Laith
+- **Autor:** Kebab, Mohamad Laith
 
-#### Motivation
+---
+
+## Motivation
 
 Für autonome mobile Roboter ist es notwendig, Objekte in ihrer Umgebung nicht
 nur zu erkennen, sondern auch deren relative Position zu bestimmen und daraus
@@ -34,12 +36,18 @@ Ziel dieses Projekts ist es, eine vollständige Verarbeitungskette von der
 Kameraaufnahme bis zur Bewegungsentscheidung des Roboters zu entwickeln. Der
 LeKiwi soll mehrere Marker erkennen können, aber ausschließlich einem
 definierten Zielmarker folgen.
-Dabei soll die implementierte Modul Struktur mögliche Erweiterungen vereinfachen,
-denn die implementierte Navigation isst einer von zahlreichen möglichen Anwendungen der ArUco Posenschätzung. 
-Auch soll eine implementierung der Vision Module auf andere Plattforme wie Roboterarme und andere mobile Roboter
-durch die definierten Schnittstellen möglich sein.
 
-Die persönliche Motivation für das Projekt ist deren Durchführung für das LeoBots Team der HTWK Leipzig. Das Team könnte von diesen Modulen sowohl für den LEkiwi als auch für andere Roboterprojekte profitieren.
+Die modulare Struktur der Implementierung soll mögliche Erweiterungen
+vereinfachen. Die hier umgesetzte Navigation stellt nur eine von vielen
+möglichen Anwendungen der ArUco-Posenschätzung dar. Durch die definierten
+Schnittstellen sollen sich die Vision-Module auch auf andere Plattformen, wie
+beispielsweise Roboterarme oder andere mobile Roboter, übertragen lassen.
+
+Eine zusätzliche Motivation für das Projekt ist die mögliche Nutzung im
+LeoBots-Team der HTWK Leipzig. Die entwickelten Module könnten dort sowohl für
+den LeKiwi als auch für weitere Roboterprojekte eingesetzt und erweitert werden.
+
+---
 
 #### Methoden
 
@@ -49,7 +57,8 @@ Die Umsetzung besteht aus mehreren aufeinanderfolgenden Verarbeitungsschritten.
 
 Vor der Positionsbestimmung wird die verwendete Kamera mit einem
 Schachbrettmuster kalibriert. Dabei werden die intrinsischen Kameraparameter
-sowie die Koeffizienten der Linsenverzerrung bestimmt.
+sowie die Koeffizienten der Linsenverzerrung bestimmt. Die Anzahl der inneren 
+Ecken des Schachbretts sollen im Code angegeben werden.
 
 Die Kalibrierungsparameter werden gespeichert und anschließend für die
 Pose-Schätzung der Marker verwendet.
@@ -156,33 +165,47 @@ und 2. Beide Marker werden erkannt und lokalisiert. Marker 0 ist als
 Navigationsziel definiert, sodass der Roboter ausschließlich auf dessen
 Position reagieren soll.
 
-Während des Hardwaretests wurden einige Parameter angepasst um die Ergebnisse zu verbessern.
-Dabei wurden verschiedene Geschwindigkeiten getestet. Bei der Validierung der gemessenen Abstände mit der Lekiwi Kamera
-schienen die Abweichungen größer als im Webcam Test, obwohl der Reproduction Error beider Kalibrierungen ähnliche Werte lieferte.
-Grund dafür war dass die gedruckten ArUco Marker für den Test am Roboter doch eine Seitenlänge von 9,5 cm statt 10,0 cm hatten.
-Nach der Korrektur der Seitenlänge wurden die Ergebnisse verbessert.
+Während der Hardwaretests wurden verschiedene Parameter, insbesondere die
+Fahrgeschwindigkeit und die Toleranzbereiche des Follow-Controllers, angepasst,
+um ein stabileres Verhalten zu erreichen.
+
+Bei der Validierung der gemessenen Abstände mit der LeKiwi-Kamera waren die
+Abweichungen zunächst größer als bei den vorherigen Webcam-Tests, obwohl die
+Reprojection Errors beider Kamerakalibrierungen in einer ähnlichen
+Größenordnung lagen.
+
+
+Als Ursache wurde die reale Seitenlänge der verwendeten ArUco-Marker beim Test am Roboter
+identifiziert. Im Gegensatz zu dem Test mit der Webcam, wo die Marker auf einem zweiten Display
+genutzt wurden und 10 cm Seitenlänge hatten, haben die gedruckten Marker eine Seitenlänge von etwa
+9,5 cm. Da die bekannte Markergröße direkt als Maßstab in die Pose Estimation eingeht,
+führte dieser Unterschied zu einer systematischen Abweichung der berechneten Translation.
+Nach der Korrektur der Markergröße konnten die Ergebnisse verbessert werden.
 
 ---
 
 ## Demonstration
 
-Für die Demonstration wurden eineige Videos aufgenommen. Einige Videos zeigen die grundsätzliche Posenschätzung
-mehrerer IDs, während andere Videos zwei bewegliche Objekte mit den ArUco-Markern
-ID 0 und ID 2 verwenden, um die Navigation zu zeigen.
+Für die Demonstration wurden mehrere kurze Videos aufgenommen. Einige Videos
+zeigen die grundlegende Erkennung und Posenschätzung mehrerer Marker-IDs,
+während weitere Videos zwei bewegliche Objekte mit den ArUco-Markern ID 0 und
+ID 2 zur Demonstration der Navigation verwenden.
+
 
 Die Demonstrationen zeigen:
 
-1. gleichzeitige Erkennung mehrerer Marker,
-2. Berechnung ihrer relativen Position,
-3. Auswahl von Marker ID 0 als Navigationsziel,
-4. Ignorieren der Marker ID 2 für die Navigation,
-5. Bewegung des Roboters in Richtung des Zielmarkers,
-6. Einhalten eines definierten Zielabstands,
-7. Stoppen des Roboters, wenn der Zielmarker nicht mehr erkannt wird.
+1. Roboterbewegungssteuerung und Kamerazugriff funktioieren
+2. gleichzeitige Erkennung mehrerer Marker,
+3. Berechnung ihrer relativen Position,
+4. Auswahl von Marker ID 0 als Navigationsziel,
+5. Ignorieren der Marker ID 2 für die Navigation,
+6. Bewegung des Roboters in Richtung des Zielmarkers,
+7. Einhalten eines definierten Zielabstands,
+8. Stoppen des Roboters, wenn der Zielmarker nicht mehr erkannt wird.
 
 ### Video
 
-Zum Playlist mit den Demovideos:
+Zur Playlist mit den Demovideos:
 
 ---
 
@@ -201,10 +224,11 @@ Die wichtigsten Komponenten sind:
 - `main.py` – Entwicklung und Tests mit externer Webcam
 - `main_lekiwi.py` – Integration auf dem LeKiwi/Raspberry Pi
 - `calibration/` – Aufnahme und Berechnung der Kamerakalibrierung
-- `requirments.txt/` – Verwendete Python Pakete
+- `requirments.txt/` – Verwendete Python-Pakete
 
-An einigen Stellen im Code können die definierten Pfade für Speicherung und Aufruf
-von Daten wie Kalibrierbilder oder Ergebnisse der Kamerakalibrierung sowie Parameter für die 
-Roboterkonfiguration oder Seitenlänge der Marker angepasst werden. Diese Stellen sind im Code entsprechend dokumentiert.
+An einigen Stellen im Code können Pfade für die Speicherung und das Laden von
+Daten, beispielsweise Kalibrierbilder und Kamerakalibrierungsparameter, sowie
+Parameter der Roboterkonfiguration und die reale Seitenlänge der Marker
+angepasst werden. Die entsprechenden Stellen sind im Quellcode kommentiert.
 
 ---
